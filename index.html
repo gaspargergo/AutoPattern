@@ -1,0 +1,238 @@
+<!doctype HTML>
+<html>
+
+<head>
+  <title>AutoPattern</title>
+
+  <style>
+
+    h1 {
+    	font-family: Century;
+    	font-size: 650%;
+    }
+
+    div{
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    #titleDiv{
+      width: 60%;
+      text-align: center;
+      margin-bottom: 100px;
+    }
+
+    #canvasDiv{
+      width: 480px;
+      height: 360px;
+      margin-bottom: 50px;
+    }
+
+    #buttonDiv{
+      width: 250px;
+      height: 45px;
+      line-height: 45px;
+      background-color: black;
+      border-radius: 2px;
+
+      text-align: center;
+      vertical-align: middle;
+      color: white;
+      font-size: 1.3em;
+      font-family: Century;
+    }
+
+    #buttonDiv:hover{
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="titleDiv"><h1>Automatic Pattern Generator</h1></div>
+
+
+  <div id="canvasDiv"><canvas id="myCanvas" width="480" height="360" style="border:1px solid #d3d3d3;">
+  Your browser does not support the HTML5 canvas tag.</canvas></div>
+
+  <a onClick="drawPattern()"><div id="buttonDiv">Create new pattern</div></a>
+
+  <script>
+    var lineTypes = [[40,40],[40,0],[40,40],[40,0],[0,40]];
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+
+    /*
+    THE LINES:
+    0: _
+
+    1: /
+
+    2: \
+
+    3: ‾
+
+    4: |
+
+    */
+
+    /*
+      MAKING THE BASE SAMPLE
+    */
+
+    function generateSample(){ //Generates the first, 4 blocks(160px) long sample as an array of numbers
+      var sample = [];
+
+      for(var i = 0; i < 4; i++){
+        var temp = getRandomInt(0,3);
+
+        sample.push(temp);
+      }
+
+      sample = checkForErrors(sample);
+
+      return sample;
+    }
+
+    function checkForErrors(arr){ //Checking and inserting 4-lines wherever needed(where lines wouldn't intersect)
+      
+      var temp = arr;
+
+      for(var i = 0; i < temp.length; i++){
+        
+        if(i != 0){
+              if(!checkIfMatch(temp[i],temp[i-1])){
+                temp.splice(i, 0, 4);
+                i++;
+              }
+            }
+
+      }
+
+      //Also check if last one fits with the first
+
+      if(!checkIfMatch(temp[0],temp[temp.length-1])){
+        temp.push(4);
+      }
+
+      return temp;
+
+    }
+
+    function checkIfMatch(curr, before){
+      switch(curr){
+
+          case 0:
+              if(before == 1 || before == 3){
+                return false;
+              }
+            break;
+
+          case 1:
+              if(before  == 3 || before == 1){
+                return false;
+              }
+            break;
+
+          case 2:
+              if(before == 0 || before == 2){
+                return false;
+              }
+            break;
+
+          case 3:
+              if(before == 0 || before == 2){
+                return false;
+              }
+            break;
+        }
+
+      return true;
+
+    }
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+
+    /*
+      DRAWING
+    */
+
+    function drawLine(sample,y){
+      console.log(sample.join());
+      var ogy = y;
+      var y = y;
+      var x = 0;
+
+      for(var j = 0; j < 3; j++){
+
+        for(var i = 0; i < sample.length;i++){
+
+          switch(sample[i]){
+            case 0:
+            case 1:
+              if(y == ogy){
+                y += 40;
+              }
+              break;
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+
+          switch(sample[i]){
+            case 0:
+            case 3:
+              x += 40;
+              break;
+            case 1:
+              y -= 40;
+              x += 40;
+              break;
+            case 2:
+              y += 40;
+              x += 40;
+              break;
+            case 4:
+              if(i != 0){
+                switch(sample[i-1]){
+                  case 0:
+                  case 2:
+                    y -= 40;
+                    break;
+                  case 1:
+                  case 3:
+                    y += 40;
+                }
+              }
+              else{
+                y += 40;
+              }
+              break;
+          }
+
+          ctx.lineTo(x, y);
+
+          ctx.stroke();
+        }
+    }
+
+    }
+
+    function drawPattern(){
+      ctx.clearRect(0, 0, c.width, c.height);
+      var temp = generateSample();
+      var start = 0;
+      for(var i = 0; i < 9; i++){
+      drawLine(temp,start);
+      start += 40;
+      }
+    }
+
+  </script>
+</body>
+
+</html>
