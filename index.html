@@ -19,13 +19,13 @@
     #titleDiv{
       width: 60%;
       text-align: center;
-      margin-bottom: 100px;
+      margin-bottom: 60px;
     }
 
     #canvasDiv{
       width: 480px;
       height: 360px;
-      margin-bottom: 50px;
+      margin-bottom: 60px;
     }
 
     #buttonDiv{
@@ -188,11 +188,11 @@
 
     function draw(){ //Decides the random elements, then calls drawPattern with the random elements as parameters
 
-      var temp = generateSample(sampleLength);
       var sampleLength = getRandomInt(3,12);
+      var temp = generateSample(sampleLength);
       var mode = getRandomInt(0,1);
 
-      drawPattern(temp, sampleLength, mode)
+      drawPattern(temp, sampleLength, mode);
       
     }
 
