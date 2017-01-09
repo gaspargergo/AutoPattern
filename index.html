@@ -56,16 +56,14 @@
   <div id="canvasDiv"><canvas id="myCanvas" width="480" height="360" style="border:1px solid #d3d3d3;">
   Your browser does not support the HTML5 canvas tag.</canvas></div>
 
-  <a onClick="drawPattern()"><div id="buttonDiv">Create new pattern</div></a>
+  <a onClick="draw()"><div id="buttonDiv">Create new pattern</div></a>
 
   <script>
-    var lineTypes = [[40,40],[40,0],[40,40],[40,0],[0,40]];
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
-    var sampleLength = 4;
 
     /*
-    THE LINES:
+    THE LINE TYPES:
     0: _
 
     1: /
@@ -79,10 +77,17 @@
     */
 
     /*
+      **********************
+      **********************
       MAKING THE BASE SAMPLE
+      **********************
+      **********************
     */
 
-    function generateSample(){ //Generates the first, 4 blocks(160px) long sample as an array of numbers
+
+
+    function generateSample(sampleLength){ //Generates the first, 4 blocks(160px) long sample as an array of numbers
+
       var sample = [];
 
       for(var i = 0; i < sampleLength; i++){
@@ -95,6 +100,7 @@
 
       return sample;
     }
+
 
     function checkForErrors(arr){ //Checking and inserting 4-lines wherever needed(where lines wouldn't intersect)
       
@@ -121,7 +127,9 @@
 
     }
 
+
     function checkIfMatch(curr, before){
+
       switch(curr){
 
           case 0:
@@ -153,20 +161,71 @@
 
     }
 
-    function getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
+
+    function makePatternLine(pattern, sampleLength){
+
+      var sample = [];
+
+      for(var i = 0; i < 12/sampleLength; i++){
+        sample = sample.concat(pattern);
+      }
+
+      return sample;
+
     }
 
 
+
     /*
+      **********************
+      **********************
       DRAWING
+      **********************
+      **********************
     */
 
+
+
+    function draw(){ //Decides the random elements, then calls drawPattern with the random elements as parameters
+
+      var temp = generateSample(sampleLength);
+      var sampleLength = getRandomInt(3,12);
+      var mode = getRandomInt(0,1);
+
+      drawPattern(temp, sampleLength, mode)
+      
+    }
+
+
+    function drawPattern(pattern, sampleLength, mode){ //makes a line of pattern with a function call, then draws that nine times, the way of drawing is dependant on the mode
+
+      ctx.clearRect(0, 0, c.width, c.height); //Clear canvas
+
+      var patternLine = makePatternLine(pattern, sampleLength);
+      var start = 0;
+      for(var i = 0; i < 9; i++){
+
+        if(mode == 1 && i > 0){
+          var popped = 4;
+
+          while(popped == 4){
+            popped = patternLine.pop();
+            patternLine.unshift(popped);
+          }
+        }
+
+      drawLine(patternLine,start);
+      start += 40;
+      }
+    }
+
+
     function drawLine(sample,y){
-      console.log(sample.join());
+      
       var ogy = y;
       var y = y;
       var x = 0;
+      console.log(sample.join());
 
       for(var i = 0; i < sample.length;i++){
 
@@ -177,24 +236,34 @@
               y += 40;
             }
             break;
+          case 2:
+          case 3:
+            if( y == ogy + 40){
+              y = ogy;
+            }
+            break;
         }
 
         ctx.beginPath();
         ctx.moveTo(x, y);
 
         switch(sample[i]){
+
           case 0:
           case 3:
             x += 40;
             break;
+
           case 1:
             y -= 40;
             x += 40;
             break;
+
           case 2:
             y += 40;
             x += 40;
             break;
+
           case 4:
             if(i != 0){
               switch(sample[i-1]){
@@ -217,26 +286,25 @@
 
         ctx.stroke();
       }
+
     }
 
 
-    function drawPattern(){
 
-      ctx.clearRect(0, 0, c.width, c.height); //Clear canvas
-      sampleLength = getRandomInt(3,12);
+    /*
+      **********************
+      **********************
+      OTHER
+      **********************
+      **********************
+    */
 
-      var temp = generateSample();
-      var sample = [];
 
-      for(var i = 0; i < 12/sampleLength; i++){
-        sample = sample.concat(temp);
-      }
+    
+    function getRandomInt(min, max) {
 
-      var start = 0;
-      for(var i = 0; i < 9; i++){
-      drawLine(sample,start);
-      start += 40;
-      }
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+
     }
 
   </script>
