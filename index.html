@@ -62,6 +62,7 @@
     var lineTypes = [[40,40],[40,0],[40,40],[40,0],[0,40]];
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
+    var sampleLength = 4;
 
     /*
     THE LINES:
@@ -84,7 +85,7 @@
     function generateSample(){ //Generates the first, 4 blocks(160px) long sample as an array of numbers
       var sample = [];
 
-      for(var i = 0; i < 4; i++){
+      for(var i = 0; i < sampleLength; i++){
         var temp = getRandomInt(0,3);
 
         sample.push(temp);
@@ -167,67 +168,73 @@
       var y = y;
       var x = 0;
 
-      for(var j = 0; j < 3; j++){
+      for(var i = 0; i < sample.length;i++){
 
-        for(var i = 0; i < sample.length;i++){
-
-          switch(sample[i]){
-            case 0:
-            case 1:
-              if(y == ogy){
-                y += 40;
-              }
-              break;
-          }
-
-          ctx.beginPath();
-          ctx.moveTo(x, y);
-
-          switch(sample[i]){
-            case 0:
-            case 3:
-              x += 40;
-              break;
-            case 1:
-              y -= 40;
-              x += 40;
-              break;
-            case 2:
+        switch(sample[i]){
+          case 0:
+          case 1:
+            if(y == ogy){
               y += 40;
-              x += 40;
-              break;
-            case 4:
-              if(i != 0){
-                switch(sample[i-1]){
-                  case 0:
-                  case 2:
-                    y -= 40;
-                    break;
-                  case 1:
-                  case 3:
-                    y += 40;
-                }
-              }
-              else{
-                y += 40;
-              }
-              break;
-          }
-
-          ctx.lineTo(x, y);
-
-          ctx.stroke();
+            }
+            break;
         }
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+
+        switch(sample[i]){
+          case 0:
+          case 3:
+            x += 40;
+            break;
+          case 1:
+            y -= 40;
+            x += 40;
+            break;
+          case 2:
+            y += 40;
+            x += 40;
+            break;
+          case 4:
+            if(i != 0){
+              switch(sample[i-1]){
+                case 0:
+                case 2:
+                  y -= 40;
+                  break;
+                case 1:
+                case 3:
+                  y += 40;
+              }
+            }
+            else{
+              y += 40;
+            }
+            break;
+        }
+
+        ctx.lineTo(x, y);
+
+        ctx.stroke();
+      }
     }
 
-    }
 
     function drawPattern(){
-      ctx.clearRect(0, 0, c.width, c.height);
+
+      ctx.clearRect(0, 0, c.width, c.height); //Clear canvas
+      sampleLength = getRandomInt(3,12);
+
       var temp = generateSample();
+      var sample = [];
+
+      for(var i = 0; i < 12/sampleLength; i++){
+        sample = sample.concat(temp);
+      }
+
       var start = 0;
       for(var i = 0; i < 9; i++){
-      drawLine(temp,start);
+      drawLine(sample,start);
       start += 40;
       }
     }
