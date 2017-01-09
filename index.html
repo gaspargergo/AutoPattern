@@ -46,6 +46,7 @@
       cursor: pointer;
     }
 
+
   </style>
 </head>
 
@@ -193,7 +194,7 @@
       var mode = getRandomInt(0,1);
 
       drawPattern(temp, sampleLength, mode);
-      
+      console.log("([" + temp.join() + "]," + sampleLength + "," + mode + ")"); 
     }
 
 
@@ -225,7 +226,6 @@
       var ogy = y;
       var y = y;
       var x = 0;
-      console.log(sample.join());
 
       for(var i = 0; i < sample.length;i++){
 
