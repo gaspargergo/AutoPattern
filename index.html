@@ -28,10 +28,9 @@
       margin-bottom: 60px;
     }
 
-    #buttonDiv{
+    #button{
       width: 250px;
       height: 45px;
-      line-height: 45px;
       background-color: black;
       border-radius: 2px;
 
@@ -40,10 +39,10 @@
       color: white;
       font-size: 1.3em;
       font-family: Century;
-    }
-
-    #buttonDiv:hover{
-      cursor: pointer;
+      display: block;
+      margin-right: auto;
+      margin-left: auto;
+      border: none;
     }
 
     #secretButton{
@@ -59,6 +58,7 @@
       cursor: pointer;
     }
 
+
   </style>
 </head>
 
@@ -70,7 +70,7 @@
   <div id="canvasDiv"><canvas id="myCanvas" width="480" height="360" style="border:1px solid #d3d3d3;">
   Your browser does not support the HTML5 canvas tag.</canvas></div>
 
-  <a onClick="draw()"><div id="buttonDiv">Create new pattern</div></a>
+  <button onClick="draw()" id="button">Create new pattern</button>
 
   <script>
     var c = document.getElementById("myCanvas");
@@ -223,7 +223,7 @@
       }
 
       drawPattern(temp, sampleLength, mode);
-      console.log("([" + temp.join() + "]," + sampleLength + "," + mode + ")"); 
+      console.log(temp.join('') + sampleLength + mode); 
     }
 
 
@@ -377,6 +377,23 @@
         var span = document.getElementById("colorSpan");
         span.style.color = colorArray[getRandomInt(0,colorArray.length-1)];
       }
+    }
+
+    function codeInput(str){ //Input code in string!
+
+      var temp = str.split('');
+      
+      var mode = parseInt(temp.pop());
+      var length = parseInt(temp.pop());
+
+      console.log(mode + "  " + length);
+
+      for(var i = 0; i < temp.length;i++){
+        temp[i] = parseInt(temp[i]);
+      }
+
+      drawPattern(temp, length, mode);
+
     }
 
   </script>
