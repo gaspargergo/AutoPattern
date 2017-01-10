@@ -46,13 +46,26 @@
       cursor: pointer;
     }
 
+    #secretButton{
+      position: absolute;
+      height: 50px;
+      width: 50px;
+      left: 40%;
+      top: 200px;
+
+    }
+
+    #secretButton:hover{
+      cursor: pointer;
+    }
 
   </style>
 </head>
 
 <body>
-  <div id="titleDiv"><h1>Automatic Pattern Generator</h1></div>
+  <div id="titleDiv"><h1 id ="title">Automatic Pattern Generator</h1></div>
 
+  <a onclick="toggleColor()"><div id="secretButton"></div></div></a>
 
   <div id="canvasDiv"><canvas id="myCanvas" width="480" height="360" style="border:1px solid #d3d3d3;">
   Your browser does not support the HTML5 canvas tag.</canvas></div>
@@ -62,6 +75,9 @@
   <script>
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
+
+    var color = false;
+    var colorArray = ["#F44336","#E91E63","#9C27B0","#673AB7","#3F51B5","#2196F3","#2962FF","#4CAF50","#FF5722"];
 
     /*
     THE LINE TYPES:
@@ -185,13 +201,26 @@
       **********************
     */
 
+    /*
+    THE MODES:
+    0: draws each line normally
 
+    1: shift to the right
+
+    2: shift to the left
+
+    3: shifts, then shifts back
+    */
 
     function draw(){ //Decides the random elements, then calls drawPattern with the random elements as parameters
 
       var sampleLength = getRandomInt(3,12);
       var temp = generateSample(sampleLength);
-      var mode = getRandomInt(0,1);
+      var mode = getRandomInt(0,3);
+
+      if(color){
+        ctx.strokeStyle = colorArray[getRandomInt(0,colorArray.length-1)];
+      }
 
       drawPattern(temp, sampleLength, mode);
       console.log("([" + temp.join() + "]," + sampleLength + "," + mode + ")"); 
@@ -212,6 +241,32 @@
           while(popped == 4){
             popped = patternLine.pop();
             patternLine.unshift(popped);
+          }
+        }
+        else if(mode == 2 && i > 0){
+          var shifted = 4;
+
+          while(shifted == 4){
+            shifted = patternLine.shift();
+            patternLine.push(shifted);
+          }
+        }
+        else if(mode == 3 && i > 0){
+          if(i % 2 == 0){
+            var shifted = 4;
+
+            while(shifted == 4){
+              shifted = patternLine.shift();
+              patternLine.push(shifted);
+            }
+          }
+          else{
+            var popped = 4;
+
+            while(popped == 4){
+              popped = patternLine.pop();
+             patternLine.unshift(popped);
+            }
           }
         }
 
@@ -283,7 +338,7 @@
         }
 
         ctx.lineTo(x, y);
-
+        ctx.lineWidth = 2;
         ctx.stroke();
       }
 
@@ -305,6 +360,23 @@
 
       return Math.floor(Math.random() * (max - min + 1)) + min;
 
+    }
+
+    function toggleColor(){
+      if(color){
+        color = false;
+        ctx.strokeStyle = "#000000";
+        var title = document.getElementById("title");;
+        title.innerHTML = "Automatic Pattern Generator";
+      }
+      else{
+        color = true;
+        var title = document.getElementById("title");;
+        title.innerHTML += "&nbspin <span id=\"colorSpan\">color!</span>";
+
+        var span = document.getElementById("colorSpan");
+        span.style.color = colorArray[getRandomInt(0,colorArray.length-1)];
+      }
     }
 
   </script>
