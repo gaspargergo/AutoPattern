@@ -60,6 +60,23 @@
       cursor: pointer;
     }
 
+    #colorContainer{
+      width: 150px;
+      height: 30px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 40px;
+      margin-top: 20px;
+      border: black solid 2px;
+      visibility: hidden;
+    }
+
+    .colorPicker{
+      height: 100%;
+      width: 20%;
+      float: left;
+    }
+
 
   </style>
 </head>
@@ -72,6 +89,16 @@
   <div id="canvasDiv"><canvas id="myCanvas" width="480" height="360" style="border:1px solid #d3d3d3;">
   Your browser does not support the HTML5 canvas tag.</canvas></div>
 
+  <div id="colorContainer">
+
+    <a onClick="changeFillColor('#008744')"><div class="colorPicker" style="background-color: #008744"></div></a>
+    <a onClick="changeFillColor('#0057e7')"><div class="colorPicker" style="background-color: #0057e7"></div></a>
+    <a onClick="changeFillColor('#d62d20')"><div class="colorPicker" style="background-color: #d62d20"></div></a>
+    <a onClick="changeFillColor('#ffa700')"><div class="colorPicker" style="background-color: #ffa700"></div></a>
+    <a onClick="changeFillColor('#fffff')"><div class="colorPicker" style="background-color: #ffffff"></div></a>
+
+  </div>
+
   <button onClick="draw()" id="button">Create new pattern</button>
 
   <script>
@@ -79,6 +106,7 @@
     var ctx = c.getContext("2d");
 
     var color = false;
+
     var colorArray = ["#F44336","#E91E63","#9C27B0","#673AB7","#3F51B5","#2196F3","#2962FF","#4CAF50","#FF5722"];
 
     /*
@@ -370,6 +398,7 @@
         ctx.strokeStyle = "#000000";
         var title = document.getElementById("title");;
         title.innerHTML = "Automatic Pattern Generator";
+        document.getElementById("colorContainer").style.visibility = "hidden";
       }
       else{
         color = true;
@@ -378,6 +407,7 @@
 
         var span = document.getElementById("colorSpan");
         span.style.color = colorArray[getRandomInt(0,colorArray.length-1)];
+        document.getElementById("colorContainer").style.visibility = "visible";
       }
     }
 
@@ -396,6 +426,49 @@
 
       drawPattern(temp, length, mode);
 
+    }
+
+    function getMousePos(canvas, evt) {
+      var rect = canvas.getBoundingClientRect();
+      return {
+        x: Math.round((evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width),
+        y: Math.round((evt.clientY-rect.top)/(rect.bottom-rect.top)*canvas.height)
+      };
+    }
+
+    c.addEventListener('click', function(evt) {
+      var mousePos = getMousePos(c, evt);                        
+      fillColor(mousePos.x,mousePos.y);
+    }, false);
+
+    function fillColor(x,y){
+      if(color){
+        var pixel = ctx.getImageData(x, y, 1, 1);
+        console.log(pixel.data[3]);
+        if(pixel.data[3] != 0){
+          console.log("already filled");
+        } else{
+          console.log("not filles")
+          ctx.fillRect(x,y,1,1);
+          if(x > 0){
+            fillColor(x-1,y);
+          }
+          if(x < c.width){
+            fillColor(x+1,y);
+          }
+          if(y > 0){
+            fillColor(x,y-1);
+          }
+          if(y < c.height){
+            fillColor(x,y+1);
+          }
+        }
+      }
+
+    }
+
+    function changeFillColor(color){
+      ctx.fillStyle = color;
     }
 
   </script>
