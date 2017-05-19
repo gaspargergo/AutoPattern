@@ -487,57 +487,59 @@
 
 
     function secondFill(x,y,v){
-      var topFound, bottomFound = false;
-      var topX,topY,bottomX,bottomY = 0;
-      var i = 0;
+      if(color){
+        var topFound, bottomFound = false;
+        var topX,topY,bottomX,bottomY = 0;
+        var i = 0;
 
-      while(isBlank(x+i,y)){  //going right
-        if(!topFound && v == "up" || !topFound && v == "up"){
-          if(isBlank(x+i,y-1)){
-            topFound = true;
-            topX = x+i;
-            topY = y-1;
+        while(isBlank(x+i,y)){  //going right
+          if(!topFound && v == "up" || !topFound && v == "up"){
+            if(isBlank(x+i,y-1)){
+              topFound = true;
+              topX = x+i;
+              topY = y-1;
+            }
           }
-        }
-        
-        if(!bottomFound && v == "down" || !bottomFound && v == "both"){
-          if(isBlank(x+i,y+1)){
-            bottomFound = true;
-            bottomX = x+i;
-            bottomY = y+1;
+          
+          if(!bottomFound && v == "down" || !bottomFound && v == "both"){
+            if(isBlank(x+i,y+1)){
+              bottomFound = true;
+              bottomX = x+i;
+              bottomY = y+1;
+            }
           }
+          
+          ctx.fillRect(x + i,y,1,1);
+          i++;
         }
-        
-        ctx.fillRect(x + i,y,1,1);
-        i++;
-      }
 
-      i = 1;
-      while(isBlank(x-i,y) ){  //going left
-        if(!topFound && v == "up" || !topFound && v == "both"){
-          if(isBlank(x-i,y-1)){
-            topFound = true;
-            topX = x-i;
-            topY = y-1;
+        i = 1;
+        while(isBlank(x-i,y) ){  //going left
+          if(!topFound && v == "up" || !topFound && v == "both"){
+            if(isBlank(x-i,y-1)){
+              topFound = true;
+              topX = x-i;
+              topY = y-1;
+            }
           }
+          
+          if(!bottomFound && v == "down" || !bottomFound && v == "both"){
+            if(isBlank(x-i,y+1)){
+              bottomFound = true;
+              bottomX = x-i;
+              bottomY = y+1;
+            }
+          }
+          ctx.fillRect(x - i,y,1,1);
+          i++;
         }
         
-        if(!bottomFound && v == "down" || !bottomFound && v == "both"){
-          if(isBlank(x-i,y+1)){
-            bottomFound = true;
-            bottomX = x-i;
-            bottomY = y+1;
-          }
+        if(topFound){
+          secondFill(topX,topY, "up");
         }
-        ctx.fillRect(x - i,y,1,1);
-        i++;
-      }
-      
-      if(topFound){
-        secondFill(topX,topY, "up");
-      }
-      if(bottomFound){
-        secondFill(bottomX,bottomY, "down");
+        if(bottomFound){
+          secondFill(bottomX,bottomY, "down");
+        }
       }
     }
 
