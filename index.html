@@ -253,6 +253,20 @@
       }
 
       drawPattern(temp, sampleLength, mode);
+
+      ctx.beginPath(); //make a frame at the start, so fill can work
+      ctx.moveTo(0, 0);
+      ctx.lineWidth = 2;
+      ctx.lineTo(c.width,0);
+      ctx.stroke();
+      ctx.lineTo(c.width,c.height);
+      ctx.stroke();
+      ctx.lineTo(0,c.height);
+      ctx.stroke();
+      ctx.lineTo(0,0);
+      ctx.stroke();
+      ctx.moveTo(0, 0);
+
       console.log(temp.join('') + sampleLength + mode); 
     }
 
@@ -438,10 +452,10 @@
 
     c.addEventListener('click', function(evt) {
       var mousePos = getMousePos(c, evt);                        
-      fillColor(mousePos.x,mousePos.y);
+      secondFill(mousePos.x,mousePos.y, "both");
     }, false);
 
-    function fillColor(x,y){
+    /*function fillColor(x,y){ OLD FILLER ALGORITHM
       if(color){
         var pixel = ctx.getImageData(x, y, 1, 1);
         console.log(pixel.data[3]);
@@ -465,10 +479,73 @@
         }
       }
 
-    }
+    } */
 
     function changeFillColor(color){
       ctx.fillStyle = color;
+    }
+
+
+    function secondFill(x,y,v){
+      var topFound, bottomFound = false;
+      var topX,topY,bottomX,bottomY = 0;
+      var i = 0;
+
+      while(isBlank(x+i,y)){  //going right
+        if(!topFound && v == "up" || !topFound && v == "up"){
+          if(isBlank(x+i,y-1)){
+            topFound = true;
+            topX = x+i;
+            topY = y-1;
+          }
+        }
+        
+        if(!bottomFound && v == "down" || !bottomFound && v == "both"){
+          if(isBlank(x+i,y+1)){
+            bottomFound = true;
+            bottomX = x+i;
+            bottomY = y+1;
+          }
+        }
+        
+        ctx.fillRect(x + i,y,1,1);
+        i++;
+      }
+
+      i = 1;
+      while(isBlank(x-i,y) ){  //going left
+        if(!topFound && v == "up" || !topFound && v == "both"){
+          if(isBlank(x-i,y-1)){
+            topFound = true;
+            topX = x-i;
+            topY = y-1;
+          }
+        }
+        
+        if(!bottomFound && v == "down" || !bottomFound && v == "both"){
+          if(isBlank(x-i,y+1)){
+            bottomFound = true;
+            bottomX = x-i;
+            bottomY = y+1;
+          }
+        }
+        ctx.fillRect(x - i,y,1,1);
+        i++;
+      }
+      
+      if(topFound){
+        secondFill(topX,topY, "up");
+      }
+      if(bottomFound){
+        secondFill(bottomX,bottomY, "down");
+      }
+    }
+
+    function isBlank(x,y){
+      if(ctx.getImageData(x,y,1,1).data[3] == 0){
+        return true;
+      }
+      return false;
     }
 
   </script>
