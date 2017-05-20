@@ -61,7 +61,7 @@
     }
 
     #colorContainer{
-      width: 150px;
+      width: 450px;
       height: 30px;
       margin-left: auto;
       margin-right: auto;
@@ -73,7 +73,7 @@
 
     .colorPicker{
       height: 100%;
-      width: 20%;
+      width: 30px;
       float: left;
     }
 
@@ -91,11 +91,21 @@
 
   <div id="colorContainer">
 
-    <a onClick="changeFillColor('#008744')"><div class="colorPicker" style="background-color: #008744"></div></a>
-    <a onClick="changeFillColor('#0057e7')"><div class="colorPicker" style="background-color: #0057e7"></div></a>
-    <a onClick="changeFillColor('#d62d20')"><div class="colorPicker" style="background-color: #d62d20"></div></a>
-    <a onClick="changeFillColor('#ffa700')"><div class="colorPicker" style="background-color: #ffa700"></div></a>
-    <a onClick="changeFillColor('#fffff')"><div class="colorPicker" style="background-color: #ffffff"></div></a>
+    <a onClick="changeFillColor('#ffffff')"><div class="colorPicker" style="background-color: #ffffff"></div></a>
+    <a onClick="changeFillColor('#bfbfbf')"><div class="colorPicker" style="background-color: #bfbfbf"></div></a>
+    <a onClick="changeFillColor('#808080')"><div class="colorPicker" style="background-color: #808080"></div></a>
+    <a onClick="changeFillColor('#404040')"><div class="colorPicker" style="background-color: #404040"></div></a>
+    <a onClick="changeFillColor('#000000')"><div class="colorPicker" style="background-color: #000000"></div></a>
+    <a onClick="changeFillColor('#6699ff')"><div class="colorPicker" style="background-color: #6699ff"></div></a>
+    <a onClick="changeFillColor('#3366cc')"><div class="colorPicker" style="background-color: #3366cc"></div></a>
+    <a onClick="changeFillColor('#003399')"><div class="colorPicker" style="background-color: #003399"></div></a>
+    <a onClick="changeFillColor('#99cc33')"><div class="colorPicker" style="background-color: #99cc33"></div></a>
+    <a onClick="changeFillColor('#00cc00')"><div class="colorPicker" style="background-color: #00cc00"></div></a>
+    <a onClick="changeFillColor('#669900')"><div class="colorPicker" style="background-color: #669900"></div></a>
+    <a onClick="changeFillColor('#ffcc00')"><div class="colorPicker" style="background-color: #ffcc00"></div></a>
+    <a onClick="changeFillColor('#ff9900')"><div class="colorPicker" style="background-color: #ff9900"></div></a>
+    <a onClick="changeFillColor('#ff6600')"><div class="colorPicker" style="background-color: #ff6600"></div></a>
+    <a onClick="changeFillColor('#cc0000')"><div class="colorPicker" style="background-color: #cc0000"></div></a>
 
   </div>
 
@@ -450,8 +460,11 @@
       };
     }
 
+    var pixel;
+
     c.addEventListener('click', function(evt) {
-      var mousePos = getMousePos(c, evt);                        
+      var mousePos = getMousePos(c, evt);  
+      pixel = ctx.getImageData(mousePos.x, mousePos.y, 1, 1);                      
       secondFill(mousePos.x,mousePos.y, "both");
     }, false);
 
@@ -544,7 +557,8 @@
     }
 
     function isBlank(x,y){
-      if(ctx.getImageData(x,y,1,1).data[3] == 0){
+      var temp = ctx.getImageData(x,y,1,1);
+      if(temp.data[1] == pixel.data[1] && temp.data[2] == pixel.data[2] && temp.data[3] == pixel.data[3]){
         return true;
       }
       return false;
