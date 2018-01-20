@@ -4,12 +4,13 @@
 <head>
   <title>AutoPattern</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Bungee|Montserrat" rel="stylesheet">
 
   <style>
 
     h1 {
-    	font-family: Century;
-    	font-size: 650%;
+    	font-family: Bungee,Century;
+    	font-size: 200%;
     }
 
     div{
@@ -20,17 +21,17 @@
     #titleDiv{
       width: 60%;
       text-align: center;
-      margin-bottom: 60px;
+      margin-bottom: 30px;
     }
 
-    #canvasDiv{
-      width: 480px;
-      height: 360px;
-      margin-bottom: 60px;
+    canvas{
+      margin-bottom: 10px;
+      border: none;
+      box-shadow: 5px 5px 16px 0px rgba(171,171,171,0.82);
     }
 
     #button{
-      width: 250px;
+      width: 180px;
       height: 45px;
       background-color: black;
       border-radius: 2px;
@@ -38,13 +39,18 @@
       text-align: center;
       vertical-align: middle;
       color: white;
-      font-size: 1.3em;
-      font-family: Century;
+      font-size: 1em;
+      font-family: Montserrat;
       display: block;
       margin-right: auto;
       margin-left: auto;
       border: none;
-      margin-bottom: 60px;
+      transition: all 0.5s ease-in-out;
+    }
+
+    #button:hover{
+      color: #ff544e;
+      cursor: pointer;
     }
 
     #secretButton{
@@ -52,7 +58,7 @@
       height: 50px;
       width: 50px;
       left: 40%;
-      top: 200px;
+      top: 100px;
 
     }
 
@@ -65,10 +71,10 @@
       height: 30px;
       margin-left: auto;
       margin-right: auto;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
       margin-top: 20px;
-      border: black solid 2px;
       visibility: hidden;
+      box-shadow: 5px 5px 16px 0px rgba(171,171,171,0.82);
     }
 
     .colorPicker{
@@ -82,12 +88,13 @@
 </head>
 
 <body>
+  <center>
   <div id="titleDiv"><h1 id ="title">Automatic Pattern Generator</h1></div>
 
   <a onclick="toggleColor()"><div id="secretButton"></div></div></a>
 
-  <div id="canvasDiv"><canvas id="myCanvas" width="480" height="360" style="border:1px solid #d3d3d3;">
-  Your browser does not support the HTML5 canvas tag.</canvas></div>
+<canvas id="myCanvas" width="400" height="400">
+  Your browser does not support the HTML5 canvas tag.</canvas>
 
   <div id="colorContainer">
 
@@ -110,6 +117,8 @@
   </div>
 
   <button onClick="draw()" id="button">Create new pattern</button>
+
+</center>
 
   <script>
     var c = document.getElementById("myCanvas");
@@ -223,7 +232,7 @@
 
       var sample = [];
 
-      for(var i = 0; i < 12/sampleLength; i++){
+      for(var i = 0; i < c.width/(sampleLength*20); i++){
         sample = sample.concat(pattern);
       }
 
@@ -264,19 +273,6 @@
 
       drawPattern(temp, sampleLength, mode);
 
-      ctx.beginPath(); //make a frame at the start, so fill can work
-      ctx.moveTo(0, 0);
-      ctx.lineWidth = 2;
-      ctx.lineTo(c.width,0);
-      ctx.stroke();
-      ctx.lineTo(c.width,c.height);
-      ctx.stroke();
-      ctx.lineTo(0,c.height);
-      ctx.stroke();
-      ctx.lineTo(0,0);
-      ctx.stroke();
-      ctx.moveTo(0, 0);
-
       console.log(temp.join('') + sampleLength + mode); 
     }
 
@@ -287,7 +283,7 @@
 
       var patternLine = makePatternLine(pattern, sampleLength);
       var start = 0;
-      for(var i = 0; i < 9; i++){
+      for(var i = 0; i < c.height/20; i++){
 
         if(mode == 1 && i > 0){
           var popped = 4;
@@ -325,7 +321,7 @@
         }
 
       drawLine(patternLine,start);
-      start += 40;
+      start += 20;
       }
     }
 
@@ -342,12 +338,12 @@
           case 0:
           case 1:
             if(y == ogy){
-              y += 40;
+              y += 20;
             }
             break;
           case 2:
           case 3:
-            if( y == ogy + 40){
+            if( y == ogy + 20){
               y = ogy;
             }
             break;
@@ -360,17 +356,17 @@
 
           case 0:
           case 3:
-            x += 40;
+            x += 20;
             break;
 
           case 1:
-            y -= 40;
-            x += 40;
+            y -= 20;
+            x += 20;
             break;
 
           case 2:
-            y += 40;
-            x += 40;
+            y += 20;
+            x += 20;
             break;
 
           case 4:
@@ -378,15 +374,15 @@
               switch(sample[i-1]){
                 case 0:
                 case 2:
-                  y -= 40;
+                  y -= 20;
                   break;
                 case 1:
                 case 3:
-                  y += 40;
+                  y += 20;
               }
             }
             else{
-              y += 40;
+              y += 20;
             }
             break;
         }
