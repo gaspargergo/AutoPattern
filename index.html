@@ -3,76 +3,31 @@
 
 <head>
   <title>AutoPattern</title>
-  <link href="https://fonts.googleapis.com/css?family=Bungee|Montserrat" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One&display=swap" rel="stylesheet">
 
   <style>
-
-    h1 {
-    	font-family: Bungee,Century;
-    	font-size: 200%;
+    body {
+      margin: 0;
+      overflow: hidden;
     }
 
-    #titleDiv{
-      width: 60%;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    canvas{
-      margin-bottom: 10px;
-      border: none;
-      box-shadow: 5px 5px 16px 0px rgba(171,171,171,0.82);
-    }
-
-    #button{
-      width: 180px;
-      height: 45px;
-      background-color: black;
-      border-radius: 2px;
-      text-align: center;
-      vertical-align: middle;
+    #title {
+      font-family: 'Alfa Slab One', sans-serif;
+      font-size: 50px;
       color: white;
-      font-size: 1em;
-      font-family: Montserrat;
-      display: block;
-      margin-right: auto;
-      margin-left: auto;
-      border: none;
-      transition: all 0.5s ease-in-out;
+      letter-spacing: -2px;
+      background-color: black;
     }
 
-    #button:hover{
-      color: #ff544e;
+    #container {
+      position: fixed;
+      margin-top: 50px;
+      text-align: center;
+      width: 100%;
+    }
+
+    a:hover{
       cursor: pointer;
-    }
-
-    #secretButton{
-      position: absolute;
-      height: 50px;
-      width: 50px;
-      left: 40%;
-      top: 100px;
-    }
-
-    #secretButton:hover{
-      cursor: pointer;
-    }
-
-    #colorContainer{
-      width: 450px;
-      height: 30px;
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 20px;
-      margin-top: 20px;
-      visibility: hidden;
-      box-shadow: 5px 5px 16px 0px rgba(171,171,171,0.82);
-    }
-
-    .colorPicker{
-      height: 100%;
-      width: 30px;
-      float: left;
     }
 
 
@@ -80,45 +35,22 @@
 </head>
 
 <body>
-  <center>
-  <div id="titleDiv"><h1 id ="title">Automatic Pattern Generator</h1></div>
+  <div id="container"><a id="title" onClick="draw()">instant patterns</a></div>
 
-  <a onclick="toggleColor()"><div id="secretButton"></div></div></a>
+  <canvas id="myCanvas"></canvas>
 
-<canvas id="myCanvas" width="600px" height="600px">
-  Your browser does not support the HTML5 canvas tag.</canvas>
-
-  <div id="colorContainer">
-
-    <a onClick="changeFillColor('#ffffff')"><div class="colorPicker" style="background-color: #ffffff"></div></a>
-    <a onClick="changeFillColor('#bfbfbf')"><div class="colorPicker" style="background-color: #bfbfbf"></div></a>
-    <a onClick="changeFillColor('#808080')"><div class="colorPicker" style="background-color: #808080"></div></a>
-    <a onClick="changeFillColor('#404040')"><div class="colorPicker" style="background-color: #404040"></div></a>
-    <a onClick="changeFillColor('#000000')"><div class="colorPicker" style="background-color: #000000"></div></a>
-    <a onClick="changeFillColor('#6699ff')"><div class="colorPicker" style="background-color: #6699ff"></div></a>
-    <a onClick="changeFillColor('#3366cc')"><div class="colorPicker" style="background-color: #3366cc"></div></a>
-    <a onClick="changeFillColor('#003399')"><div class="colorPicker" style="background-color: #003399"></div></a>
-    <a onClick="changeFillColor('#99cc33')"><div class="colorPicker" style="background-color: #99cc33"></div></a>
-    <a onClick="changeFillColor('#00cc00')"><div class="colorPicker" style="background-color: #00cc00"></div></a>
-    <a onClick="changeFillColor('#669900')"><div class="colorPicker" style="background-color: #669900"></div></a>
-    <a onClick="changeFillColor('#ffcc00')"><div class="colorPicker" style="background-color: #ffcc00"></div></a>
-    <a onClick="changeFillColor('#ff9900')"><div class="colorPicker" style="background-color: #ff9900"></div></a>
-    <a onClick="changeFillColor('#ff6600')"><div class="colorPicker" style="background-color: #ff6600"></div></a>
-    <a onClick="changeFillColor('#cc0000')"><div class="colorPicker" style="background-color: #cc0000"></div></a>
-
-  </div>
-
-  <button onClick="draw()" id="button">Create new pattern</button>
-
-</center>
 
   <script>
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
 
-    var color = false;
-
-    var colorArray = ["#F44336","#E91E63","#9C27B0","#673AB7","#3F51B5","#2196F3","#2962FF","#4CAF50","#FF5722"];
+    document.addEventListener('mousedown', function (event) {
+    if (event.detail > 1) {
+      event.preventDefault();
+      }
+    }, false);
 
     /*
     THE LINE TYPES:
@@ -259,13 +191,7 @@
       var temp = generateSample(sampleLength);
       var mode = getRandomInt(0,3);
 
-      if(color){
-        ctx.strokeStyle = colorArray[getRandomInt(0,colorArray.length-1)];
-      }
-
       drawPattern(temp, sampleLength, mode);
-
-      console.log(temp.join('') + sampleLength + mode); 
     }
 
 
@@ -403,155 +329,6 @@
       return Math.floor(Math.random() * (max - min + 1)) + min;
 
     }
-
-    function toggleColor(){
-      if(color){
-        color = false;
-        ctx.strokeStyle = "#000000";
-        var title = document.getElementById("title");;
-        title.innerHTML = "Automatic Pattern Generator";
-        document.getElementById("colorContainer").style.visibility = "hidden";
-      }
-      else{
-        color = true;
-        var title = document.getElementById("title");;
-        title.innerHTML += "&nbspin <span id=\"colorSpan\">color!</span>";
-
-        var span = document.getElementById("colorSpan");
-        span.style.color = colorArray[getRandomInt(0,colorArray.length-1)];
-        document.getElementById("colorContainer").style.visibility = "visible";
-      }
-    }
-
-    function codeInput(str){ //Input code in string!
-
-      var temp = str.split('');
-      
-      var mode = parseInt(temp.pop());
-      var length = parseInt(temp.pop());
-
-      console.log(mode + "  " + length);
-
-      for(var i = 0; i < temp.length;i++){
-        temp[i] = parseInt(temp[i]);
-      }
-
-      drawPattern(temp, length, mode);
-
-    }
-
-    function getMousePos(canvas, evt) {
-      var rect = canvas.getBoundingClientRect();
-      return {
-        x: Math.round((evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width),
-        y: Math.round((evt.clientY-rect.top)/(rect.bottom-rect.top)*canvas.height)
-      };
-    }
-
-    var pixel;
-
-    c.addEventListener('click', function(evt) {
-      var mousePos = getMousePos(c, evt);  
-      pixel = ctx.getImageData(mousePos.x, mousePos.y, 1, 1);                      
-      secondFill(mousePos.x,mousePos.y, "both");
-    }, false);
-
-    /*function fillColor(x,y){ OLD FILLER ALGORITHM
-      if(color){
-        var pixel = ctx.getImageData(x, y, 1, 1);
-        console.log(pixel.data[3]);
-        if(pixel.data[3] != 0){
-          console.log("already filled");
-        } else{
-          console.log("not filles")
-          ctx.fillRect(x,y,1,1);
-          if(x > 0){
-            fillColor(x-1,y);
-          }
-          if(x < c.width){
-            fillColor(x+1,y);
-          }
-          if(y > 0){
-            fillColor(x,y-1);
-          }
-          if(y < c.height){
-            fillColor(x,y+1);
-          }
-        }
-      }
-
-    } */
-
-    function changeFillColor(color){
-      ctx.fillStyle = color;
-    }
-
-
-    function secondFill(x,y,v){
-      if(color){
-        var topFound, bottomFound = false;
-        var topX,topY,bottomX,bottomY = 0;
-        var i = 0;
-
-        while(isBlank(x+i,y)){  //going right
-          if(!topFound && v == "up" || !topFound && v == "up"){
-            if(isBlank(x+i,y-1)){
-              topFound = true;
-              topX = x+i;
-              topY = y-1;
-            }
-          }
-          
-          if(!bottomFound && v == "down" || !bottomFound && v == "both"){
-            if(isBlank(x+i,y+1)){
-              bottomFound = true;
-              bottomX = x+i;
-              bottomY = y+1;
-            }
-          }
-          
-          ctx.fillRect(x + i,y,1,1);
-          i++;
-        }
-
-        i = 1;
-        while(isBlank(x-i,y) ){  //going left
-          if(!topFound && v == "up" || !topFound && v == "both"){
-            if(isBlank(x-i,y-1)){
-              topFound = true;
-              topX = x-i;
-              topY = y-1;
-            }
-          }
-          
-          if(!bottomFound && v == "down" || !bottomFound && v == "both"){
-            if(isBlank(x-i,y+1)){
-              bottomFound = true;
-              bottomX = x-i;
-              bottomY = y+1;
-            }
-          }
-          ctx.fillRect(x - i,y,1,1);
-          i++;
-        }
-        
-        if(topFound){
-          secondFill(topX,topY, "up");
-        }
-        if(bottomFound){
-          secondFill(bottomX,bottomY, "down");
-        }
-      }
-    }
-
-    function isBlank(x,y){
-      var temp = ctx.getImageData(x,y,1,1);
-      if(temp.data[1] == pixel.data[1] && temp.data[2] == pixel.data[2] && temp.data[3] == pixel.data[3]){
-        return true;
-      }
-      return false;
-    }
-
   </script>
 </body>
 
